@@ -11,8 +11,8 @@ Install
 ------------------------------
 Type below commands:
 
-    $ cd $RAILS_ROOT/plugins
-    $ git clone https://github.com/suer/redmine_webhook.git
+    $ cd plugins
+    $ git clone https://github.com/lexdan30/redmine_webhook.git
     $ rake redmine:plugins:migrate RAILS_ENV=production
 
 Then, restart your redmine.
