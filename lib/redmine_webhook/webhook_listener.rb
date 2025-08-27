@@ -116,7 +116,7 @@ module RedmineWebhook
           lines = []
           lines << "📌 Redmine #{journal ? 'Update' : 'New'}"
           lines << "Subject: #{subject_line}\n"
-          lines << "Issue ##{issue['id']} has been #{journal ? 'updated' : 'created'} by #{author}.\n\n"
+          lines << "課題 ##{issue['id']} は、#{author} によって#{journal ? '更新' : '作成'}されました。\n\n"
 
           # Due date
           # lines << "Due date set to #{Date.parse(issue['due_date']).strftime("%m/%d/%Y")}\n" if issue['due_date']
@@ -129,7 +129,8 @@ module RedmineWebhook
             # due_detail = journal['details']&.find { |d| d['property'] == 'attr' && d['prop_key'] == 'due_date' }
             if detail
               previous_status = status_record[detail['old_value']] || "Unknown"
-              lines << "Status changed from #{previous_status} to #{current_status}\n"
+              lines << "ステータスが「#{previous_status}」から「#{current_status}」に変更されました。\n"
+
               # if due_detail
               #   lines << "Due date changed from #{Date.parse(due_detail['old_value']).strftime("%m/%d/%Y")} to #{Date.parse(due_detail['value']).strftime("%m/%d/%Y")}\n"
               # end
@@ -137,11 +138,11 @@ module RedmineWebhook
               # if due_detail
               #   lines << "Due date changed from #{Date.parse(due_detail['old_value']).strftime("%m/%d/%Y")} to #{Date.parse(due_detail['value']).strftime("%m/%d/%Y")}\n"
               # else
-                lines << "Status is #{current_status}\n"
+                lines << "現在のステータスは「#{current_status}」です。\n"
               # end
             end
           else
-            lines << "Status is #{current_status}\n"
+            lines << "現在のステータスは「#{current_status}」です。\n"
           end
 
           # Start date
