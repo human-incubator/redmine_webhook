@@ -116,13 +116,13 @@ module RedmineWebhook
           lines = []
           lines << "📌 Redmine #{journal ? 'Update' : 'New'}"
           lines << "Subject: #{subject_line}\n"
-          lines << "課題 ##{issue['id']} は、#{author} によって#{journal ? '更新' : '作成'}されました。\n\n"
+          lines << "課題 ##{issue['id']} は、#{author} によって#{journal ? '更新' : '作成'}されました。\n"
 
           # Notes
-          lines << "\n#{journal['notes']}\n" if journal && !journal['notes'].empty?
+          lines << "#{journal['notes']}\n" if journal && !journal['notes'].empty?
 
           # Issue URL
-          lines << "\nURL: #{payload['payload']['url']}"
+          lines << "URL: #{payload['payload']['url']}"
 
           chat_message = { text: lines.join("\n") }
 
