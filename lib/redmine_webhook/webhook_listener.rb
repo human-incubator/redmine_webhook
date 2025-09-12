@@ -116,7 +116,7 @@ module RedmineWebhook
           lines = []
           lines << "📌 Redmine #{journal ? 'Update' : 'New'}"
           lines << "Subject: #{subject_line}\n"
-          lines << "課題 ##{issue['id']} は、#{author} によって#{journal ? '更新' : '作成'}されました。\n"
+          lines << "Issue ##{issue['id']} was #{journal ? 'updated' : 'created'} by #{author}.\n" 
 
           # Notes
           lines << "#{journal['notes']}\n" if journal && !journal['notes'].empty?
