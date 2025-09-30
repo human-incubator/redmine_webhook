@@ -6,6 +6,11 @@ module RedmineWebhook
       @status_map ||= IssueStatus.all.index_by { |s| s.id.to_s }.transform_values(&:name)
     end
 
+    def user_record
+      @user_map ||= User.all.index_by { |u| u.id.to_s }
+                        .transform_values { |u| "#{u.firstname} #{u.lastname}" }
+    end
+
     def skip_webhooks(context)
       return true unless context[:request]
       return true if context[:request].headers['X-Skip-Webhooks']
@@ -116,10 +121,24 @@ module RedmineWebhook
           lines = []
           lines << "📌 Redmine #{journal ? 'Update' : 'New'}"
           lines << "Subject: #{subject_line}\n"
-          lines << "課題 ##{issue['id']} は、#{author} によって#{journal ? '更新' : '作成'}されました。\n"
+          lines << "課題 ##{issue['id']} は、#{author} によって#{journal ? '更新' : '作成'}されました。"
+
+          lines << "\n担当者: #{issue['assignee']['firstname']} #{issue['assignee']['lastname']}"
+          value_0 = issue.dig('custom_field_values', 0, 'value')
+          value_1 = issue.dig('custom_field_values', 1, 'value')
+          value_2 = issue.dig('custom_field_values', 2, 'value')
+          if value_0.present?
+            lines << "#{issue['custom_field_values'][0]['custom_field_name']}: #{user_record[issue['custom_field_values'][0]['value']]}"
+          end 
+          if value_1.present?
+            lines << "#{issue['custom_field_values'][1]['custom_field_name']}: #{user_record[issue['custom_field_values'][1]['value']]}"
+          end 
+          if value_2.present?
+            lines << "#{issue['custom_field_values'][2]['custom_field_name']}: #{user_record[issue['custom_field_values'][2]['value']]}"
+          end   
 
           # Notes
-          lines << "#{journal['notes']}\n" if journal && !journal['notes'].empty?
+          lines << "\n#{journal['notes']}\n" if journal && !journal['notes'].empty?
 
           # Issue URL
           lines << "URL: #{payload['payload']['url']}"
